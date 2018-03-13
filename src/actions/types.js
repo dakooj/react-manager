@@ -7,3 +7,4 @@ export const LOGIN_USER_START = 'login_user_start';
 
 //---------- Employee Action Types ------------//
 export const EMPLOYEE_UPDATE = 'employee_update';
+export const EMPLOYEE_CREATE = 'employee_create';
