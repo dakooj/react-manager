@@ -11,7 +11,12 @@ class EmployeeEdit extends Component {
     super();
 
     this.onButtonPress = this.onButtonPress.bind(this);
+    this.onTextPress = this.onTextPress.bind(this);
+    this.onAccept = this.onAccept.bind(this);
+    this.onDecline = this.onDecline.bind(this);
   }
+
+  state = { showModal: false };
 
   componentWillMount() {
     //TODO: Add another action creator to accept an entire employee 
@@ -27,6 +32,22 @@ class EmployeeEdit extends Component {
     this.props.employeeSave({ name, phone, shift, uid: this.props.employee.uid });
   }
 
+  onTextPress() {
+    const { phone, shift } = this.props;
+
+    Communications.text(phone, `Your upcoming shift is on ${shift}`);
+  }
+
+  onAccept() {
+    const { uid } = this.props.employee;
+
+    this.props.employeeDelete({ uid });
+  }
+
+  onDecline() {
+    this.setState({ showModal: false });
+  }
+
   render() {
     return (
       <Card>
@@ -36,6 +57,26 @@ class EmployeeEdit extends Component {
             Save Changes
           </Button>
         </CardSection>
+
+        <CardSection>
+          <Button onPress={this.onTextPress}>
+            Text Schedule
+          </Button>
+        </CardSection>
+
+        <CardSection>
+          <Button onPress={() => this.setState({ showModal: !this.state.showModal })}>
+            Fire Employee
+          </Button>
+        </CardSection>
+
+        <Confirm
+          visible={this.state.showModal}
+          onAccept={this.onAccept}
+          onDecline={this.onDecline}
+        >
+          Are you sure you want to delete this?
+        </Confirm>
       </Card>
     );
   }
@@ -48,5 +89,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { 
-  employeeUpdate, employeeSave 
+  employeeUpdate, employeeSave, employeeDelete
 })(EmployeeEdit);
